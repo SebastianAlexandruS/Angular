@@ -1,0 +1,6 @@
+{
+    "BASE_URL4": "http://localhost:8081/graphql",
+    "BASE_URL": "http://consumer-1-ip-service:8081/graphql",
+    "BASE_URL3": "http://192.168.49.2:30163/graphql",
+    "BASE_URL2": "${BASE_URL}"
+}

@@ -1,0 +1,68 @@
+<mgl-map
+    [style]="'https://api.maptiler.com/maps/streets/style.json?key=D3UBwf9yrucnBfNlsnan'"
+    [zoom]="zoom"
+    [center]="center"
+    (mapLoad)="map = $event"
+>
+
+    <div *ngFor="let line of linesLayer; let i = index">
+        <mgl-geojson-source id="oneline {{ i }}">
+            <mgl-feature [geometry]="line.geometry"></mgl-feature>
+        </mgl-geojson-source>
+
+        <mgl-layer
+            (layerClick)="centerMap($event, line.properties.name)"
+            id="route {{ i }}"
+            type="line"
+            source="oneline {{ i }}"
+            [layout]="{
+                'line-join': 'round',
+                'line-cap': 'round'
+            }"
+            [paint]="{
+                'line-color': '#888',
+                'line-width': 8
+            }"
+        >
+        </mgl-layer>
+    </div>
+
+    <div *ngFor="let polygon of polygonsLayer; let i = index">
+        <mgl-geojson-source id="onepolygon {{ i }}">
+            <mgl-feature [geometry]="polygon.geometry"></mgl-feature>
+        </mgl-geojson-source>
+
+        <mgl-layer
+            (layerClick)="centerMap($event, polygon.properties.name)"
+            id="polygon {{ i }}"
+            type="fill"
+            source="onepolygon {{ i }}"
+            [paint]="polygonLayerPaint"
+            (layerMouseMove)="activateHoverOn()"
+            (layerMouseLeave)="disableHover()"
+        >
+        </mgl-layer>
+        <mgl-popup *ngIf="" [lngLat]="center">
+            <span [innerHTML]="polygon.properties.name"></span>
+        </mgl-popup>
+    </div>
+
+    <div *ngFor="let point of pointsLayer; let i = index">
+        <mgl-geojson-source id="onepoint {{ i }}">
+            <mgl-feature [geometry]="point.geometry"></mgl-feature>
+        </mgl-geojson-source>
+
+        <mgl-layer
+            (layerClick)="centerMap($event, point.properties.name)"
+            id="point {{ i }}"
+            type="circle"
+            source="onepoint {{ i }}"
+            [paint]="lineLayerPaint"
+        >
+        </mgl-layer>
+    </div>
+    <mgl-popup *ngIf="selectedLngLat" [lngLat]="center">
+        <span [innerHTML]="selectedElement"></span>
+    </mgl-popup>
+
+</mgl-map>
